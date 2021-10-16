@@ -31,11 +31,13 @@ class ContactsHomeViewController: UIViewController {
     private func setup() {
         let viewController = self
         let viewModel = ContactsHomeViewModel()
-        viewController.viewModel = viewModel
         viewModel.view = viewController
         let router = ContactsHomeRouter(viewController)
-        viewController.router = router
         router.dataStore = viewModel
+        
+        viewController.viewModel = viewModel
+        viewController.router = router
+        
     }
     
     override func viewDidLoad() {

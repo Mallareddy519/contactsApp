@@ -8,9 +8,9 @@ import UIKit
 enum ContactsHomeModel {
     struct Contact {
         let id: Int
-        let email: String
-        let firstName, lastName: String
         let avatar: String
+        let firstName, lastName: String
+        let mobile, email: String
     }
 }
 

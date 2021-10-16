@@ -20,13 +20,16 @@ class ContactsHomeViewModel: ContactsHomeDataStore {
     }
     
     func handleSuccessfetchContacts(_ response: ContactsResponse) {
+        var counter = 0
         let result = response.data?.map({ user -> ContactsHomeModel.Contact in
+            counter += 1
             return ContactsHomeModel.Contact(
                 id: user.id ?? 0,
-                email: user.email ?? "",
+                avatar: user.avatar ?? "",
                 firstName: user.first_name ?? "",
                 lastName: user.last_name ?? "",
-                avatar: user.avatar ?? "")
+                mobile: "+6584118\(counter)75",
+                email: user.email ?? "")
         }) ?? []
         view?.displayContacts(result)
     }

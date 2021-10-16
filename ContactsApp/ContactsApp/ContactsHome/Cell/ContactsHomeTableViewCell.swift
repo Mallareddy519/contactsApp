@@ -19,6 +19,6 @@ class ContactsHomeTableViewCell: UITableViewCell {
     
     func configCell(model: ContactsHomeModel.Contact) {
         avatar.loadImageAsync(with: model.avatar)
-        nameLabel.text = model.firstName + model.lastName
+        nameLabel.text = model.firstName + " " + model.lastName
     }
 }
