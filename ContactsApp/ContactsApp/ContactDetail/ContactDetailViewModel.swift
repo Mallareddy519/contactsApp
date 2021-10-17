@@ -9,9 +9,13 @@ protocol DetailViewModelBusinessLogic {
     func fetchContact()
 }
 
-class ContactDetailViewModel: ContactsDetailDataStore {
+class ContactDetailViewModel: ContactDetailDataStore {
     var contact: ContactsHomeModel.Contact?
-    weak var view: ContactsDetailDisplayLogic?
+    private weak var view: ContactDetailDisplayLogic?
+    
+    init(view: ContactDetailDisplayLogic) {
+        self.view = view
+    }
     
 }
 

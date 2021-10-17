@@ -26,6 +26,10 @@
 		DFFD8FBB271AB354008C5D3C /* ContactDetailModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFD8FBA271AB354008C5D3C /* ContactDetailModel.swift */; };
 		DFFD8FC0271AB728008C5D3C /* ContactsHomeRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFD8FBF271AB728008C5D3C /* ContactsHomeRouter.swift */; };
 		DFFD8FC5271ABCC9008C5D3C /* ContactDetailRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFD8FC4271ABCC9008C5D3C /* ContactDetailRouter.swift */; };
+		DFFD8FD4271AE9BF008C5D3C /* ContactEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFD8FD3271AE9BF008C5D3C /* ContactEditViewController.swift */; };
+		DFFD8FDC271AE9DD008C5D3C /* ContactEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFD8FDB271AE9DD008C5D3C /* ContactEditViewModel.swift */; };
+		DFFD8FE1271AE9ED008C5D3C /* ContactEditModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFD8FE0271AE9ED008C5D3C /* ContactEditModel.swift */; };
+		DFFD8FE6271AEE3A008C5D3C /* ContactEditRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFFD8FE5271AEE3A008C5D3C /* ContactEditRouter.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +75,10 @@
 		DFFD8FBA271AB354008C5D3C /* ContactDetailModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactDetailModel.swift; sourceTree = "<group>"; };
 		DFFD8FBF271AB728008C5D3C /* ContactsHomeRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsHomeRouter.swift; sourceTree = "<group>"; };
 		DFFD8FC4271ABCC9008C5D3C /* ContactDetailRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactDetailRouter.swift; sourceTree = "<group>"; };
+		DFFD8FD3271AE9BF008C5D3C /* ContactEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactEditViewController.swift; sourceTree = "<group>"; };
+		DFFD8FDB271AE9DD008C5D3C /* ContactEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactEditViewModel.swift; sourceTree = "<group>"; };
+		DFFD8FE0271AE9ED008C5D3C /* ContactEditModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactEditModel.swift; sourceTree = "<group>"; };
+		DFFD8FE5271AEE3A008C5D3C /* ContactEditRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactEditRouter.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,9 +129,10 @@
 		DFFD8F46271A8E53008C5D3C /* ContactsApp */ = {
 			isa = PBXGroup;
 			children = (
-				DFFD8FAF271AB306008C5D3C /* ContactDetail */,
-				DFFD8FA7271AA958008C5D3C /* Helpers */,
 				DFFD8F86271A9B4C008C5D3C /* ContactsHome */,
+				DFFD8FAF271AB306008C5D3C /* ContactDetail */,
+				DFFD8FD2271AE991008C5D3C /* ContactEdit */,
+				DFFD8FA7271AA958008C5D3C /* Helpers */,
 				DFFD8F47271A8E53008C5D3C /* AppDelegate.swift */,
 				DFFD8F49271A8E53008C5D3C /* SceneDelegate.swift */,
 				DFFD8F4D271A8E53008C5D3C /* Main.storyboard */,
@@ -191,6 +200,17 @@
 				DFFD8FC4271ABCC9008C5D3C /* ContactDetailRouter.swift */,
 			);
 			path = ContactDetail;
+			sourceTree = "<group>";
+		};
+		DFFD8FD2271AE991008C5D3C /* ContactEdit */ = {
+			isa = PBXGroup;
+			children = (
+				DFFD8FD3271AE9BF008C5D3C /* ContactEditViewController.swift */,
+				DFFD8FDB271AE9DD008C5D3C /* ContactEditViewModel.swift */,
+				DFFD8FE0271AE9ED008C5D3C /* ContactEditModel.swift */,
+				DFFD8FE5271AEE3A008C5D3C /* ContactEditRouter.swift */,
+			);
+			path = ContactEdit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -327,10 +347,14 @@
 				DFFD8F95271A9F95008C5D3C /* ContactsHomeModel.swift in Sources */,
 				DFFD8F48271A8E53008C5D3C /* AppDelegate.swift in Sources */,
 				DFFD8FC5271ABCC9008C5D3C /* ContactDetailRouter.swift in Sources */,
+				DFFD8FD4271AE9BF008C5D3C /* ContactEditViewController.swift in Sources */,
+				DFFD8FE1271AE9ED008C5D3C /* ContactEditModel.swift in Sources */,
 				DFFD8F4A271A8E53008C5D3C /* SceneDelegate.swift in Sources */,
 				DFFD8F9C271AA515008C5D3C /* ContactsHomeTableViewCell.swift in Sources */,
 				DFFD8FC0271AB728008C5D3C /* ContactsHomeRouter.swift in Sources */,
+				DFFD8FE6271AEE3A008C5D3C /* ContactEditRouter.swift in Sources */,
 				DFFD8FB1271AB32E008C5D3C /* ContactDetailViewController.swift in Sources */,
+				DFFD8FDC271AE9DD008C5D3C /* ContactEditViewModel.swift in Sources */,
 				DFFD8FBB271AB354008C5D3C /* ContactDetailModel.swift in Sources */,
 				DFFD8FAA271AA96B008C5D3C /* NetworkingHelper.swift in Sources */,
 				DFFD8F90271A9BB7008C5D3C /* ContactsHomeViewModel.swift in Sources */,

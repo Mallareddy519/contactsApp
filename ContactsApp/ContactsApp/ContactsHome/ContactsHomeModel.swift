@@ -10,7 +10,7 @@ enum ContactsHomeModel {
         let id: Int
         let avatar: String
         let firstName, lastName: String
-        let mobile, email: String
+        let email: String
     }
 }
 

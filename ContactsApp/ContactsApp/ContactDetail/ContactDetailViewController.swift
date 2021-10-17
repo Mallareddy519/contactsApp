@@ -5,13 +5,13 @@
 
 import UIKit
 
-protocol ContactsDetailDisplayLogic: class {
+protocol ContactDetailDisplayLogic: class {
     func displayContact(_ contact: ContactsHomeModel.Contact)
 }
 
 class ContactDetailViewController: UIViewController {
     var viewModel: DetailViewModelBusinessLogic?
-    var router: (ContactsDetailRoutingLogic & ContactsDetailDataPassing)?
+    var router: (ContactDetailRoutingLogic & ContactDetailDataPassing)?
     
     @IBOutlet private weak var topContainerView: UIView!
     @IBOutlet private weak var avatar: UIImageView!
@@ -39,8 +39,7 @@ class ContactDetailViewController: UIViewController {
     // MARK: Setup
     private func setup() {
         let viewController = self
-        let viewModel = ContactDetailViewModel()
-        viewModel.view = viewController
+        let viewModel = ContactDetailViewModel(view: viewController)
         let router = ContactDetailRouter(viewController)
         router.dataStore = viewModel
         
@@ -70,7 +69,7 @@ class ContactDetailViewController: UIViewController {
     }
     
     @objc func tapEditButton() {
-        print("tap Edit Button.")
+        router?.routeToEditContactView()
     }
     
     private func fetchContacts() {
@@ -94,7 +93,7 @@ class ContactDetailViewController: UIViewController {
     }
 }
 
-extension ContactDetailViewController: ContactsDetailDisplayLogic {
+extension ContactDetailViewController: ContactDetailDisplayLogic {
     func displayContact(_ contact: ContactsHomeModel.Contact) {
         avatar?.loadImageAsync(with: contact.avatar)
         nameLabel?.text = contact.firstName + " " + contact.lastName
@@ -102,9 +101,9 @@ extension ContactDetailViewController: ContactsDetailDisplayLogic {
         callTitle?.text = "call"
         emailTitle?.text = "email"
         favoriteTitle?.text = "favorite"
-        emailNameLabel?.text = "email:"
-        mobileNameLabel?.text = "mobile:"
+        emailNameLabel?.text = "email"
+        mobileNameLabel?.text = "mobile"
         emailLabel?.text = contact.email
-        mobileLabel?.text = contact.mobile
+        mobileLabel?.text = String(contact.id)
     }
 }

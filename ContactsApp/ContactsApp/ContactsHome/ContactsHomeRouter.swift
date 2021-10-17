@@ -10,6 +10,7 @@ protocol ContactsHomeDataStore {
 }
 
 @objc protocol ContactsHomeRoutingLogic {
+    func routeToAddContactView()
     func routeToDetailContactView()
 }
 
@@ -25,6 +26,18 @@ class ContactsHomeRouter: NSObject, ContactsHomeRoutingLogic, ContactsHomeDataPa
         self.viewController = viewController
     }
     
+    func routeToAddContactView() {
+        let destinationVC = ContactEditViewController.initFromStoryboard()
+        guard var destinationDS = destinationVC.router?.dataStore, let dataStore = self.dataStore else { return }
+        passDataToContactAddView(source: dataStore, destination: &destinationDS)
+        viewController?.show(destinationVC, sender: nil)
+    }
+    
+    func passDataToContactAddView(source: ContactsHomeDataStore,
+                                  destination: inout ContactEditDataStore) {
+        destination.entryPoint = .add
+    }
+    
     func routeToDetailContactView() {
         let destinationVC = ContactDetailViewController.initFromStoryboard()
         guard var destinationDS = destinationVC.router?.dataStore, let dataStore = self.dataStore else { return }
@@ -33,7 +46,7 @@ class ContactsHomeRouter: NSObject, ContactsHomeRoutingLogic, ContactsHomeDataPa
     }
     
     func passDataToContactDetailView(source: ContactsHomeDataStore,
-                                     destination: inout ContactsDetailDataStore) {
+                                     destination: inout ContactDetailDataStore) {
         destination.contact = source.contact
     }
 }

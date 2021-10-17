@@ -6,16 +6,18 @@
 import UIKit
 
 protocol ContactsHomeDisplayLogic: class {
-    func displayContacts(_ contacts: [ContactsHomeModel.Contact])
+    func displayContacts(_ contacts: [[ContactsHomeModel.Contact]])
     func displayDetailContactView()
 }
 
 class ContactsHomeViewController: UIViewController {
     var viewModel: ViewModelBusinessLogic?
     var router: (ContactsHomeRoutingLogic & ContactsHomeDataPassing)?
-    var contacts: [ContactsHomeModel.Contact] = []
+    var contacts: [[ContactsHomeModel.Contact]] = []
     
     @IBOutlet weak private var tableView: UITableView!
+    private var isShowGroups = false
+    var alphabetOrder = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","#"]
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -30,8 +32,7 @@ class ContactsHomeViewController: UIViewController {
     // MARK: Setup
     private func setup() {
         let viewController = self
-        let viewModel = ContactsHomeViewModel()
-        viewModel.view = viewController
+        let viewModel = ContactsHomeViewModel(view: viewController)
         let router = ContactsHomeRouter(viewController)
         router.dataStore = viewModel
         
@@ -48,6 +49,11 @@ class ContactsHomeViewController: UIViewController {
         fetchContacts()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchContacts()
+    }
+    
     func setupNavbar() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .add,
                                                             target: self,
@@ -59,11 +65,13 @@ class ContactsHomeViewController: UIViewController {
     }
     
     @objc func tapGroupsButton() {
-        print("tap Groups Button.")
+        isShowGroups.toggle()
+        navigationItem.leftBarButtonItem?.tintColor = isShowGroups ? .green : .systemBlue
+        viewModel?.getGroupedContacts(isShowGroups)
     }
     
     @objc func tapAddButton() {
-        print("tap Add Button.")
+        router?.routeToAddContactView()
     }
     
     private func setupTableView() {
@@ -71,33 +79,51 @@ class ContactsHomeViewController: UIViewController {
         tableView.register(
             UINib(nibName: ContactsHomeTableViewCell.identifier, bundle: nil),
             forCellReuseIdentifier: ContactsHomeTableViewCell.identifier)
+        tableView.selectionFollowsFocus = true
     }
     
     func fetchContacts() {
-        viewModel?.fetchContacts()
+        viewModel?.fetchContacts(isShowGroups)
     }
 }
 
 extension ContactsHomeViewController: UITableViewDelegate, UITableViewDataSource {
+    // Side List in tableview
+    public func numberOfSections(in tableView: UITableView) -> Int {
+        return isShowGroups ? alphabetOrder.count : (contacts.count > 0 ? 1 : 0)
+    }
+    
+    public func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        return isShowGroups ? self.alphabetOrder : nil //Side Section title
+    }
+    
+    public func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
+        return index
+    }
+    
+    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return isShowGroups ? alphabetOrder[section] : nil
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return contacts.count
+        return contacts[section].count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ContactsHomeTableViewCell.identifier, for: indexPath) as? ContactsHomeTableViewCell else {
             return UITableViewCell()
         }
-        cell.configCell(model: contacts[indexPath.row])
+        cell.configCell(model: contacts[indexPath.section][indexPath.row])
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        viewModel?.setSelectedContact(contacts[indexPath.row])
+        viewModel?.setSelectedContact(contacts[indexPath.section][indexPath.row])
     }
 }
 
 extension ContactsHomeViewController: ContactsHomeDisplayLogic {
-    func displayContacts(_ contacts: [ContactsHomeModel.Contact]) {
+    func displayContacts(_ contacts: [[ContactsHomeModel.Contact]]) {
         self.contacts = contacts
         DispatchQueue.main.async {
             self.tableView.reloadData()

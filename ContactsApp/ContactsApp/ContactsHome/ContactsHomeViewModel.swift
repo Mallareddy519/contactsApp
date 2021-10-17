@@ -6,32 +6,45 @@
 import Foundation
 
 protocol ViewModelBusinessLogic {
-    func fetchContacts()
+    func fetchContacts(_ isShowGroups: Bool)
     func setSelectedContact(_ contact: ContactsHomeModel.Contact?)
+    func getGroupedContacts(_ isShowGroups: Bool)
 }
 
 class ContactsHomeViewModel: ContactsHomeDataStore {
     var contact: ContactsHomeModel.Contact?
-    weak var view: ContactsHomeDisplayLogic?
-    private let service: ContactsProvider
+    private weak var view: ContactsHomeDisplayLogic?
     
-    init(service: ContactsProvider = NetworkAPI()) {
+    private let service: ContactsFetchProvider
+    private var contacts: [ContactsHomeModel.Contact] = []
+    var alphabetOrder: [Character] = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","#"]
+    
+    init(service: ContactsFetchProvider = NetworkAPI(),
+         view: ContactsHomeDisplayLogic) {
         self.service = service
+        self.view = view
     }
     
-    func handleSuccessfetchContacts(_ response: ContactsResponse) {
-        var counter = 0
-        let result = response.data?.map({ user -> ContactsHomeModel.Contact in
-            counter += 1
+    func handleSuccessfetchContacts(_ response: ContactsResponse, isShowGroups: Bool) {
+        contacts = response.data?.map({ user -> ContactsHomeModel.Contact in
             return ContactsHomeModel.Contact(
                 id: user.id ?? 0,
                 avatar: user.avatar ?? "",
                 firstName: user.first_name ?? "",
                 lastName: user.last_name ?? "",
-                mobile: "+6584118\(counter)75",
                 email: user.email ?? "")
         }) ?? []
-        view?.displayContacts(result)
+        let groupsContact = makeGroupContacts(contacts: contacts, isShowGroups: isShowGroups)
+        view?.displayContacts(groupsContact)
+    }
+    
+    private func makeGroupContacts(contacts: [ContactsHomeModel.Contact],
+                                   isShowGroups: Bool) -> [[ContactsHomeModel.Contact]] {
+        let groupContacts = alphabetOrder.map { order -> [ContactsHomeModel.Contact] in
+            let orderList = contacts.filter({ $0.firstName.uppercased().first == order })
+            return orderList
+        }
+        return isShowGroups ? groupContacts : [groupContacts.reduce([], +)]
     }
     
     func handleFailfetchContacts(_ error: APIError) {
@@ -40,11 +53,11 @@ class ContactsHomeViewModel: ContactsHomeDataStore {
 }
 
 extension ContactsHomeViewModel: ViewModelBusinessLogic {
-    func fetchContacts() {
+    func fetchContacts(_ isShowGroups: Bool) {
         service.fetchContacts { result in
             switch result {
             case.success(let response):
-                self.handleSuccessfetchContacts(response)
+                self.handleSuccessfetchContacts(response, isShowGroups: isShowGroups)
             case.failure(let error):
                 self.handleFailfetchContacts(error)
             }
@@ -54,5 +67,10 @@ extension ContactsHomeViewModel: ViewModelBusinessLogic {
     func setSelectedContact(_ contact: ContactsHomeModel.Contact?) {
         self.contact = contact
         view?.displayDetailContactView()
+    }
+    
+    func getGroupedContacts(_ isShowGroups: Bool) {
+        let groupsContact = makeGroupContacts(contacts: contacts, isShowGroups: isShowGroups)
+        view?.displayContacts(groupsContact)
     }
 }

@@ -5,28 +5,36 @@
 
 import UIKit
 
-protocol ContactsDetailDataStore {
+protocol ContactDetailDataStore {
     var contact: ContactsHomeModel.Contact? { get set }
 }
 
-@objc protocol ContactsDetailRoutingLogic {
+@objc protocol ContactDetailRoutingLogic {
     func routeToEditContactView()
 }
 
-protocol ContactsDetailDataPassing {
-    var dataStore: ContactsDetailDataStore? { get }
+protocol ContactDetailDataPassing {
+    var dataStore: ContactDetailDataStore? { get }
 }
 
-class ContactDetailRouter: NSObject, ContactsDetailRoutingLogic, ContactsDetailDataPassing {
+class ContactDetailRouter: NSObject, ContactDetailRoutingLogic, ContactDetailDataPassing {
     weak var viewController: UIViewController?
-    var dataStore: ContactsDetailDataStore?
+    var dataStore: ContactDetailDataStore?
     
     init(_ viewController: UIViewController) {
         self.viewController = viewController
     }
     
     func routeToEditContactView() {
-        let destinationVC = ContactDetailViewController.initFromStoryboard()
+        let destinationVC = ContactEditViewController.initFromStoryboard()
+        guard var destinationDS = destinationVC.router?.dataStore, let dataStore = self.dataStore else { return }
+        passDataToContactEditView(source: dataStore, destination: &destinationDS)
         viewController?.show(destinationVC, sender: nil)
+    }
+    
+    func passDataToContactEditView(source: ContactDetailDataStore,
+                                   destination: inout ContactEditDataStore) {
+        destination.contact = source.contact
+        destination.entryPoint = .edit
     }
 }
