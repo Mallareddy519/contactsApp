@@ -11,6 +11,13 @@ enum ContactEditModel {
         case add
         case edit
     }
+    
+    struct UpdateData {
+        var firstname: String?
+        var lastname: String?
+        var mobile: String?
+        var email: String?
+    }
 }
 
 struct UpdateResponse: Codable {

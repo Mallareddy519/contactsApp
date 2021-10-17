@@ -8,6 +8,7 @@ import UIKit
 protocol ContactEditDisplayLogic: class {
     func displayContact(contact: ContactsHomeModel.Contact)
     func updatedContact()
+    func enableDoneButton(enable: Bool)
 }
 
 class ContactEditViewController: UIViewController {
@@ -52,6 +53,7 @@ class ContactEditViewController: UIViewController {
         setupNavbar()
         topContainerView.backgroundColor = UIColor.green.withAlphaComponent(0.1)
         avatar?.layer.cornerRadius = 72
+        setupTextFields()
         firstNameTitle.text = "First Name"
         lastNameTitle.text = "Last Name"
         mobileTitle.text = "Mobile"
@@ -85,6 +87,12 @@ class ContactEditViewController: UIViewController {
         router?.routeToBack()
     }
     
+    private func setupTextFields() {
+        for textField in [firstNameTF, lastNameTF, mobileTF, emailTF] {
+            textField?.delegate = self
+        }
+    }
+    
     private func updateViews() {
         switch router?.dataStore?.entryPoint {
         case .edit:
@@ -110,5 +118,24 @@ extension ContactEditViewController: ContactEditDisplayLogic {
     
     func updatedContact() {
         router?.returnToHome()
+    }
+    
+    func enableDoneButton(enable: Bool) {
+        navigationItem.rightBarButtonItem?.isEnabled = enable
+    }
+}
+
+extension ContactEditViewController: UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        let request = ContactEditModel.UpdateData(firstname: firstNameTF.text,
+                                                  lastname: lastNameTF.text,
+                                                  mobile: mobileTF.text,
+                                                  email: emailTF.text)
+        viewModel?.enableDoneButton(request)
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

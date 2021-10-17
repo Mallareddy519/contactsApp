@@ -9,6 +9,7 @@ import Foundation
 protocol EditViewModelBusinessLogic {
     func getContact()
     func updateContact(firstName: String, lastName: String)
+    func enableDoneButton(_ request: ContactEditModel.UpdateData)
 }
 
 class ContactEditViewModel: ContactEditDataStore {
@@ -79,5 +80,23 @@ extension ContactEditViewModel: EditViewModelBusinessLogic {
         case .edit:
             callServiceUpdateContact(firstName: firstName, lastName: lastName)
         }
+    }
+    
+    func enableDoneButton(_ request: ContactEditModel.UpdateData) {
+        var isEnable = false
+        switch entryPoint {
+        case .add:
+            let result = [request.firstname,
+                          request.lastname,
+                          request.mobile,
+                          request.email].map { text -> Bool in
+                if let text = text, !text.isEmpty { return true }
+                else { return false  }
+            }.contains(false)
+            isEnable = !result
+        case .edit:
+            isEnable = request.firstname != contact?.firstName || request.lastname != contact?.lastName
+        }
+        view?.enableDoneButton(enable: isEnable)
     }
 }

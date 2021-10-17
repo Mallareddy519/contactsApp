@@ -26,7 +26,7 @@ class ContactsHomeViewModel: ContactsHomeDataStore {
     }
     
     func handleSuccessfetchContacts(_ response: ContactsResponse, isShowGroups: Bool) {
-        contacts = response.data?.map({ user -> ContactsHomeModel.Contact in
+        let respContacts = response.data?.map({ user -> ContactsHomeModel.Contact in
             return ContactsHomeModel.Contact(
                 id: user.id ?? 0,
                 avatar: user.avatar ?? "",
@@ -34,6 +34,7 @@ class ContactsHomeViewModel: ContactsHomeDataStore {
                 lastName: user.last_name ?? "",
                 email: user.email ?? "")
         }) ?? []
+        contacts.append(contentsOf: respContacts)
         let groupsContact = makeGroupContacts(contacts: contacts, isShowGroups: isShowGroups)
         view?.displayContacts(groupsContact)
     }
@@ -41,7 +42,7 @@ class ContactsHomeViewModel: ContactsHomeDataStore {
     private func makeGroupContacts(contacts: [ContactsHomeModel.Contact],
                                    isShowGroups: Bool) -> [[ContactsHomeModel.Contact]] {
         let groupContacts = alphabetOrder.map { order -> [ContactsHomeModel.Contact] in
-            let orderList = contacts.filter({ $0.firstName.uppercased().first == order })
+            let orderList = contacts.filter({ $0.firstName.uppercased().first == order }).sorted(by: { $0.firstName < $1.firstName })
             return orderList
         }
         return isShowGroups ? groupContacts : [groupContacts.reduce([], +)]

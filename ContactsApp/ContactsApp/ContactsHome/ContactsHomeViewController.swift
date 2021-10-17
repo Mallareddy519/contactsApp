@@ -16,6 +16,7 @@ class ContactsHomeViewController: UIViewController {
     var contacts: [[ContactsHomeModel.Contact]] = []
     
     @IBOutlet weak private var tableView: UITableView!
+    private let spinner = UIActivityIndicatorView(style: .large)
     private var isShowGroups = false
     var alphabetOrder = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","#"]
     
@@ -38,7 +39,6 @@ class ContactsHomeViewController: UIViewController {
         
         viewController.viewModel = viewModel
         viewController.router = router
-        
     }
     
     override func viewDidLoad() {
@@ -46,11 +46,6 @@ class ContactsHomeViewController: UIViewController {
         // Do any additional setup after loading the view.
         setupNavbar()
         setupTableView()
-        fetchContacts()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         fetchContacts()
     }
     
@@ -80,6 +75,10 @@ class ContactsHomeViewController: UIViewController {
             UINib(nibName: ContactsHomeTableViewCell.identifier, bundle: nil),
             forCellReuseIdentifier: ContactsHomeTableViewCell.identifier)
         tableView.selectionFollowsFocus = true
+        spinner.frame = CGRect(x: 0, y: 0, width: 60, height: 60)
+        spinner.color = UIColor.green
+        spinner.hidesWhenStopped = true
+        tableView.tableFooterView = spinner
     }
     
     func fetchContacts() {
@@ -120,12 +119,29 @@ extension ContactsHomeViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         viewModel?.setSelectedContact(contacts[indexPath.section][indexPath.row])
     }
+    
+    func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+        let offset = scrollView.contentOffset
+        let bounds = scrollView.bounds
+        let size = scrollView.contentSize
+        let inset = scrollView.contentInset
+        
+        let y = offset.y + bounds.size.height - inset.bottom
+        let h = size.height
+        
+        let reloadDistance = CGFloat(30.0)
+        if y > h + reloadDistance {
+            spinner.startAnimating()
+            fetchContacts()
+        }
+    }
 }
 
 extension ContactsHomeViewController: ContactsHomeDisplayLogic {
     func displayContacts(_ contacts: [[ContactsHomeModel.Contact]]) {
         self.contacts = contacts
         DispatchQueue.main.async {
+            self.spinner.stopAnimating()
             self.tableView.reloadData()
         }
     }
