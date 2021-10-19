@@ -34,7 +34,14 @@ class ContactsHomeViewModel: ContactsHomeDataStore {
                 lastName: user.last_name ?? "",
                 email: user.email ?? "")
         }) ?? []
-        contacts.append(contentsOf: respContacts)
+        
+        respContacts.forEach { contact in
+            if let index = contacts.firstIndex(where: { $0.id == contact.id }) {
+                contacts[index] = contact
+            } else {
+                contacts.append(contact)
+            }
+        }
         let groupsContact = makeGroupContacts(contacts: contacts, isShowGroups: isShowGroups)
         view?.displayContacts(groupsContact)
     }
@@ -49,7 +56,7 @@ class ContactsHomeViewModel: ContactsHomeDataStore {
     }
     
     func handleFailfetchContacts(_ error: APIError) {
-        print("Occur API error.")
+        view?.displayGenericError()
     }
 }
 

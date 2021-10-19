@@ -8,6 +8,7 @@ import UIKit
 protocol ContactsHomeDisplayLogic: class {
     func displayContacts(_ contacts: [[ContactsHomeModel.Contact]])
     func displayDetailContactView()
+    func displayGenericError()
 }
 
 class ContactsHomeViewController: UIViewController {
@@ -148,5 +149,9 @@ extension ContactsHomeViewController: ContactsHomeDisplayLogic {
     
     func displayDetailContactView() {
         router?.routeToDetailContactView()
+    }
+    
+    func displayGenericError() {
+        print("Occur API error.")
     }
 }

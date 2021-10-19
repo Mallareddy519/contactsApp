@@ -9,6 +9,7 @@ protocol ContactEditDisplayLogic: class {
     func displayContact(contact: ContactsHomeModel.Contact)
     func updatedContact()
     func enableDoneButton(enable: Bool)
+    func displayGenericError()
 }
 
 class ContactEditViewController: UIViewController {
@@ -122,6 +123,10 @@ extension ContactEditViewController: ContactEditDisplayLogic {
     
     func enableDoneButton(enable: Bool) {
         navigationItem.rightBarButtonItem?.isEnabled = enable
+    }
+    
+    func displayGenericError() {
+        print("Occur API error.")
     }
 }
 

@@ -5,7 +5,6 @@
 
 import Foundation
 
-
 protocol EditViewModelBusinessLogic {
     func getContact()
     func updateContact(firstName: String, lastName: String)
@@ -42,7 +41,6 @@ class ContactEditViewModel: ContactEditDataStore {
     }
     
     private func handleUpdateSuccess(_ response: UpdateResponse) {
-        print("Update contact success.")
         view?.updatedContact()
     }
     
@@ -58,12 +56,11 @@ class ContactEditViewModel: ContactEditDataStore {
     }
     
     private func handleCreateSuccess(_ response: ContactsResponse) {
-        print("Create contact success.")
         view?.updatedContact()
     }
     
     func handleFailfetchContacts(_ error: APIError) {
-        print("Occur API error.")
+        view?.displayGenericError()
     }
 }
 
@@ -90,9 +87,9 @@ extension ContactEditViewModel: EditViewModelBusinessLogic {
                           request.lastname,
                           request.mobile,
                           request.email].map { text -> Bool in
-                if let text = text, !text.isEmpty { return true }
-                else { return false  }
-            }.contains(false)
+                            if let text = text, !text.isEmpty { return true }
+                            else { return false  }
+                          }.contains(false)
             isEnable = !result
         case .edit:
             isEnable = request.firstname != contact?.firstName || request.lastname != contact?.lastName
